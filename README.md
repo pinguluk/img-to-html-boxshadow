@@ -1,6 +1,6 @@
 # img-to-html-boxshadow
 
-img-to-htm-boxshadow is a Python script that converts every pixel from an image, to a box-shadow pixel.
+img-to-html-boxshadow is a Python script that converts every pixel from an image, to a box-shadow pixel.
 
 ## Installation
 
