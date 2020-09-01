@@ -32,3 +32,6 @@ imgtohtmlboxshadow.py -img fish.png -output fish.html
 
 - Convert rgba(r, g, b, a) to hex value, to reduce the file size
 - Improve the width (and height) of a pixel, when the adjacent pixels are the same, in order to remove repetitive pixels and improve file size 
+
+## Checkout the other I've made, using HTML elements
+[img-to-html](https://github.com/pinguluk/img-to-html)
