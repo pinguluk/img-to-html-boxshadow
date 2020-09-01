@@ -74,7 +74,7 @@ for y in range(height):
         # if current pixel is not transparent
         if pixeldata[x, y][3] != 0:
             # add box shadow pixel
-            boxShadow += str(x + 1) + "px " + str(y) + "px " + "0 " + RGBAtoHex(pixeldata[x,y]) + ","
+            boxShadow += str(x + 1) + "px " + str(y) + "px " + RGBAtoHex(pixeldata[x,y]) + ","
 
 # remove the last extra comma
 boxShadow = boxShadow[:-1]
