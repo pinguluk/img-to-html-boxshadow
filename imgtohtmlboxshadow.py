@@ -7,6 +7,7 @@ def RGBAtoHex(tuple):
     b = format(tuple[2], 'x')
     a = format(tuple[3], 'x')
 
+    # if value is <= 9, aka 1 char length, we add 0 before it
     if len(r) == 1:
         r = "0" + r
     if len(g) == 1:
@@ -62,10 +63,6 @@ file.write(f'<body><div class="container" style="display:inline-block;width:{str
 
 # box shadow that will apply to the div
 boxShadow = ''
-
-# counter for the number of iterated pixels
-pixelCount = 0
-
 
 # loop rows
 for y in range(height):
