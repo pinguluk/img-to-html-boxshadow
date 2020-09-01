@@ -1,6 +1,32 @@
 from PIL import Image
 import argparse, sys
 
+def RGBAtoHex(tuple):
+    r = format(tuple[0], 'x')
+    g = format(tuple[1], 'x')
+    b = format(tuple[2], 'x')
+    a = format(tuple[3], 'x')
+
+    if len(r) == 1:
+        r = "0" + r
+    if len(g) == 1:
+        g = "0" + g
+    if len(b) == 1:
+        b = "0" + b
+    if len(a) == 1:
+        a = "0" + a
+
+    # if a is not 255
+    if a != "255":
+        return "#" + str(r) + str(g) + str(b) + str(a)
+
+    # else if a is 255
+    # we will hide it, because it's ignored from browser and will reduce file size
+    # ex: #c45959ff is the same as #c45959; 255 = ff
+    else:
+        return "#" + str(r) + str(g) + str(b)
+
+
 # arguments parser
 parser=argparse.ArgumentParser()
 parser.add_argument('-image', '--image', '-img' , '--img', help='Image filename + extension', required=True)
@@ -32,7 +58,7 @@ else:
 file.write('<!DOCTYPE html><html><head></head>')
 
 # write the body: a container for the image width the width and height of the image & a 1x1 pixels div, that will contain the image as a box-shadow
-file.write(f'<body><div class="container" style="position:relative;display:inline-block;width:{str(width) + "px"};height:{str(height) + "px"}"><div id="img" style="background:transparent;width:1px;height:1px;position:absolute;top:0;left:-1px;box-shadow:')
+file.write(f'<body><div class="container" style="display:inline-block;width:{str(width) + "px"};height:{str(height) + "px"}"><div id="img" style="background:transparent;width:1px;height:1px;margin-left:-1px;box-shadow:')
 
 # box shadow that will apply to the div
 boxShadow = ''
@@ -40,37 +66,18 @@ boxShadow = ''
 # counter for the number of iterated pixels
 pixelCount = 0
 
+
 # loop rows
 for y in range(height):
     # loop columns
     for x in range(width):
-        # if current pixel is transparent => box shadow pixel will be transparent
-        if pixeldata[x, y][3] == 0:
-            boxShadow += str(x + 1) + "px " + str(y) + "px " + "0 " + "#f000" # we add +1, otherwise, the div will overlap the boxshadow pixel
-            
-        # else write the current pixel to rgb value
-        else:
-            # rgbaValue = (r, g, b, a), where a = a / 255 (we need value between 0 and 1) & format to 2 decimals
-            r = str(pixeldata[x,y][0])
-            g = str(pixeldata[x,y][1])
-            b = str(pixeldata[x,y][2])
-            a = str(format(pixeldata[x,y][3]/255, '.2f'))
-
-            # if a == 0.00, set it to 0 so we minify the output
-            if a == '0.00':
-                a = '0'
-            # else if a == 1.00, set it to 0 so we minify the output as well
-            elif a == '1.00':
-                a = '1'
-
+        # if current pixel is not transparent
+        if pixeldata[x, y][3] != 0:
             # add box shadow pixel
-            boxShadow += str(x + 1) + "px " + str(y) + "px " + "0 " + f'rgba({r}, {g}, {b}, {a})'
+            boxShadow += str(x + 1) + "px " + str(y) + "px " + "0 " + RGBAtoHex(pixeldata[x,y]) + ","
 
-        # if the pixelCount isn't the last pixel from the image
-        # we will add comma to each box shadow pixel
-        if pixelCount != (width * height) - 1:
-            boxShadow += ','
-            pixelCount += 1
+# remove the last extra comma
+boxShadow = boxShadow[:-1]
 
 # add the boxshadow style to the div and close it
 file.write(boxShadow + '">')
